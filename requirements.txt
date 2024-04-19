@@ -2,3 +2,4 @@ Django==5.0.4
 djangorestframework==3.15.1
 psycopg2==2.9.9
 celery[redis]==5.3.5
+flower==2.0.1

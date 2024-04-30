@@ -27,12 +27,14 @@ class Plan(models.Model):
         self.__discount_percentage = self.discount_percentage
 
     def save(self, *args, **kwargs):
+        created = self.pk is None
+        super().save(*args, **kwargs)
+        if not created and self.discount_percentage != self.__discount_percentage:
+            self.update_subscriptions()
 
-        if self.discount_percentage != self.__discount_percentage:
-            for subscription in self.subscriptions.all():
-                set_price.delay(subscription.id)
-
-        return super().save(*args, **kwargs)
+    def update_subscriptions(self):
+        for subscription in self.subscriptions.all():
+            set_price.delay(subscription.id)
 
 
 class Subscription(models.Model):
